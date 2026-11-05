@@ -1,0 +1,26 @@
+services:
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - board-data:/app/data
+    environment:
+      - PORT=3001
+      # Tarayıcı Origin başlığı (WS el sıkışması). LAN veya özel alan adı için virgülle ekleyin.
+      - ALLOWED_ORIGINS=http://localhost:5173,http://127.0.0.1:5173
+      # Gerekirse: WS_ALLOW_INSECURE=1 (köken kontrolünü kapatır, önerilmez)
+
+  client:
+    build:
+      context: .
+      dockerfile: client/Dockerfile
+    ports:
+      - "5173:80"
+    depends_on:
+      - server
+
+volumes:
+  board-data:
